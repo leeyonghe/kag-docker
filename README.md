@@ -1,4 +1,4 @@
-# KAG: Knowledge Augmented Generation
+# KAG: 지식 증강 생성
 
 <div align="center">
 <a href="https://spg.openkg.cn/en-US">
@@ -30,177 +30,175 @@
    </a>
 </p>
 
-# 1. What is KAG?
+# 1. KAG란 무엇인가요?
 
-KAG is a logical reasoning and Q&A framework based on the [OpenSPG](https://github.com/OpenSPG/openspg) engine and large language models, which is used to build logical reasoning and Q&A solutions for vertical domain knowledge bases.  KAG can effectively overcome the ambiguity of traditional RAG vector similarity calculation and the noise problem of GraphRAG introduced by OpenIE.  KAG supports logical reasoning and multi-hop fact Q&A, etc., and is significantly better than the current SOTA method.
+KAG는 [OpenSPG](https://github.com/OpenSPG/openspg) 엔진과 대규모 언어 모델을 기반으로 한 논리적 추론 및 Q&A 프레임워크로, 수직 도메인 지식 기반을 위한 논리적 추론 및 Q&A 솔루션을 구축하는 데 사용됩니다. KAG는 기존 RAG 벡터 유사도 계산의 모호성과 OpenIE에 의해 발생하는 GraphRAG의 노이즈 문제를 효과적으로 극복할 수 있습니다. KAG는 논리적 추론과 멀티홉 사실 Q&A 등을 지원하며, 현재 SOTA 방법보다 훨씬 우수한 성능을 보입니다.
 
-The goal of KAG is to build a knowledge-enhanced LLM service framework in professional domains, supporting logical reasoning, factual Q&A, etc. KAG fully integrates the logical and factual characteristics of the KGs. Its core features include:
+KAG의 목표는 전문 도메인에서 지식 증강 LLM 서비스 프레임워크를 구축하여 논리적 추론, 사실 Q&A 등을 지원하는 것입니다. KAG는 지식 그래프의 논리적 특성과 사실적 특성을 완전히 통합합니다. 주요 기능은 다음과 같습니다:
 
-- Knowledge and Chunk Mutual Indexing structure to integrate more complete contextual text information
-- Knowledge alignment using conceptual semantic reasoning to alleviate the noise problem caused by OpenIE
-- Schema-constrained knowledge construction to support the representation and construction of domain expert knowledge
-- Logical form-guided hybrid reasoning and retrieval to support logical reasoning and multi-hop reasoning Q&A
+- 더 완전한 컨텍스트 텍스트 정보를 통합하기 위한 지식과 청크 상호 인덱싱 구조
+- OpenIE로 인한 노이즈 문제를 완화하기 위한 개념적 의미 추론을 사용한 지식 정렬
+- 도메인 전문가 지식의 표현과 구축을 지원하는 스키마 제약 지식 구축
+- 논리적 추론과 멀티홉 추론 Q&A를 지원하는 논리 형식 기반 하이브리드 추론 및 검색
 
-⭐️ Star our repository to stay up-to-date with exciting new features and improvements! Get instant notifications for new releases! 🌟
+⭐️ 새로운 기능과 개선 사항을 놓치지 않으려면 우리의 저장소를 스타해주세요! 새로운 릴리스에 대한 즉각적인 알림을 받으세요! 🌟
 
 ![Star KAG](./_static/images/star-kag.gif)
 
-# 2. Core Features
+# 2. 핵심 기능
 
-## 2.1 Knowledge Representation
+## 2.1 지식 표현
 
-In the context of private knowledge bases, unstructured data, structured information, and business expert experience often coexist. KAG references the DIKW hierarchy to upgrade SPG to a version that is friendly to LLMs. 
+개인 지식 기반의 맥락에서 비정형 데이터, 구조화된 정보, 비즈니스 전문가 경험이 종종 공존합니다. KAG는 DIKW 계층 구조를 참조하여 SPG를 LLM에 친화적인 버전으로 업그레이드했습니다.
 
-For unstructured data such as news, events, logs, and books, as well as structured data like transactions, statistics, and approvals, along with business experience and domain knowledge rules, KAG employs techniques such as layout analysis, knowledge extraction, property normalization, and semantic alignment to integrate raw business data and expert rules into a unified business knowledge graph.
+뉴스, 이벤트, 로그, 책과 같은 비정형 데이터와 거래, 통계, 승인과 같은 구조화된 데이터, 그리고 비즈니스 경험과 도메인 지식 규칙에 대해 KAG는 레이아웃 분석, 지식 추출, 속성 정규화, 의미 정렬 등의 기술을 사용하여 원시 비즈니스 데이터와 전문가 규칙을 통합된 비즈니스 지식 그래프로 통합합니다.
 
 ![KAG Diagram](./_static/images/kag-diag.jpg)
 
-This makes it compatible with schema-free information extraction and schema-constrained expertise construction on the same knowledge type (e. G., entity type, event type), and supports the cross-index representation between the graph structure and the original text block. 
+이를 통해 동일한 지식 유형(예: 엔티티 유형, 이벤트 유형)에서 스키마 없는 정보 추출과 스키마 제약 전문 지식 구축을 동시에 지원하며, 그래프 구조와 원본 텍스트 블록 간의 상호 인덱스 표현을 지원합니다.
 
-This mutual index representation is helpful to the construction of inverted index based on graph structure, and promotes the unified representation and reasoning of logical forms.
+이 상호 인덱스 표현은 그래프 구조 기반의 역인덱스 구축에 도움이 되며, 논리 형식의 통일된 표현과 추론을 촉진합니다.
 
-## 2.2 Mixed Reasoning Guided by Logic Forms
+## 2.2 논리 형식 기반 하이브리드 추론
 
 ![Logical Form Solver](./_static/images/kag-lf-solver.png)
 
-KAG proposes a logically formal guided hybrid solution and inference engine. 
+KAG는 논리적으로 형식화된 하이브리드 솔루션과 추론 엔진을 제안합니다.
 
-The engine includes three types of operators: planning, reasoning, and retrieval, which transform natural language problems into problem solving processes that combine language and notation. 
+엔진은 계획, 추론, 검색의 세 가지 유형의 연산자를 포함하며, 자연어 문제를 언어와 기호를 결합한 문제 해결 프로세스로 변환합니다.
 
-In this process, each step can use different operators, such as exact match retrieval, text retrieval, numerical calculation or semantic reasoning, so as to realize the integration of four different problem solving processes: Retrieval, Knowledge Graph reasoning, language reasoning and numerical calculation.
+이 과정에서 각 단계는 정확한 매칭 검색, 텍스트 검색, 수치 계산 또는 의미 추론과 같은 서로 다른 연산자를 사용할 수 있어 검색, 지식 그래프 추론, 언어 추론, 수치 계산의 네 가지 다른 문제 해결 프로세스를 통합할 수 있습니다.
 
-# 3. Release Notes
+# 3. 릴리스 노트
 
-## 3.1 Latest Updates
+## 3.1 최신 업데이트
 
-* 2025.04.17 : Released KAG 0.7 Version 
-  * First, we refactored the KAG-Solver framework. Added support for two task planning modes, static and iterative, while implementing a more rigorous knowledge layering mechanism for the reasoning phase. 
-  * Second, we optimized the product experience: introduced dual modes—"Simple Mode" and "Deep Reasoning"—during the reasoning phase, along with support for streaming inference output, automatic rendering of graph indexes, and linking generated content to original references. 
-  * Added an open_benchmark directory to the top level of the KAG repository, comparing various RAG methods under the same base to achieve state-of-the-art (SOTA) results. 
-  * Introduced a "Lightweight Build" mode, reducing knowledge construction token costs by 89%.
-* 2025.01.07 : Support domain knowledge injection, domain schema customization, QFS tasks support, Visual query analysis, enables schema-constraint mode for extraction, etc.
-* 2024.11.21 : Support Word docs upload, model invoke concurrency setting, User experience optimization, etc.
-* 2024.10.25 : KAG initial release
+* 2025.04.17 : KAG 0.7 버전 출시
+  * 첫째, KAG-Solver 프레임워크를 리팩토링했습니다. 정적 및 반복적 두 가지 작업 계획 모드를 추가했으며, 추론 단계를 위한 더 엄격한 지식 계층화 메커니즘을 구현했습니다.
+  * 둘째, 제품 경험을 최적화했습니다: 추론 단계에서 "단순 모드"와 "심층 추론"의 이중 모드를 도입했으며, 스트리밍 추론 출력, 그래프 인덱스 자동 렌더링, 생성된 콘텐츠와 원본 참조 연결을 지원합니다.
+  * KAG 저장소의 최상위에 open_benchmark 디렉토리를 추가하여 동일한 기준에서 다양한 RAG 방법을 비교하여 최신 기술(SOTA) 결과를 달성했습니다.
+  * "경량 구축" 모드를 도입하여 지식 구축 토큰 비용을 89% 감소시켰습니다.
+* 2025.01.07 : 도메인 지식 주입, 도메인 스키마 사용자 정의, QFS 작업 지원, 시각적 쿼리 분석, 추출을 위한 스키마 제약 모드 활성화 등 지원
+* 2024.11.21 : Word 문서 업로드, 모델 호출 동시성 설정, 사용자 경험 최적화 등 지원
+* 2024.10.25 : KAG 초기 릴리스
 
-## 3.2 Future Plans
+## 3.2 향후 계획
 
-* Logical reasoning optimization, conversational tasks support
-* kag-model release, kag solution for event reasoning knowledge graph and medical knowledge graph
-* kag front-end open source, distributed build support, mathematical reasoning optimization
+* 논리적 추론 최적화, 대화형 작업 지원
+* kag-model 출시, 이벤트 추론 지식 그래프 및 의료 지식 그래프를 위한 kag 솔루션
+* kag 프론트엔드 오픈소스, 분산 구축 지원, 수학적 추론 최적화
 
-# 4. Quick Start
+# 4. 빠른 시작
 
-## 4.1 product-based (for ordinary users)
+## 4.1 제품 기반 (일반 사용자용)
 
-### 4.1.1 Engine & Dependent Image Installation
+### 4.1.1 엔진 및 의존성 이미지 설치
 
-* **Recommend System Version:**
-
-  ```text
-  macOS User：macOS Monterey 12.6 or later
-  Linux User：CentOS 7 / Ubuntu 20.04 or later
-  Windows User：Windows 10 LTSC 2021 or later
-  ```
-
-* **Software Requirements:**
+* **권장 시스템 버전:**
 
   ```text
-  macOS / Linux User：Docker，Docker Compose
-  Windows User：WSL 2 / Hyper-V，Docker，Docker Compose
+  macOS 사용자: macOS Monterey 12.6 이상
+  Linux 사용자: CentOS 7 / Ubuntu 20.04 이상
+  Windows 사용자: Windows 10 LTSC 2021 이상
   ```
 
-Use the following commands to download the docker-compose.yml file and launch the services with Docker Compose.
+* **소프트웨어 요구사항:**
+
+  ```text
+  macOS / Linux 사용자: Docker, Docker Compose
+  Windows 사용자: WSL 2 / Hyper-V, Docker, Docker Compose
+  ```
+
+다음 명령어를 사용하여 docker-compose.yml 파일을 다운로드하고 Docker Compose로 서비스를 시작하세요.
 
 ```bash
-# set the HOME environment variable (only Windows users need to execute this command)
+# HOME 환경 변수 설정 (Windows 사용자만 이 명령어를 실행해야 함)
 # set HOME=%USERPROFILE%
 
 curl -sSL https://raw.githubusercontent.com/OpenSPG/openspg/refs/heads/master/dev/release/docker-compose-west.yml -o docker-compose-west.yml
 docker compose -f docker-compose-west.yml up -d
 ```
 
-### 4.1.2 Use the product
+### 4.1.2 제품 사용
 
-Navigate to the default url of the KAG product with your browser: <http://127.0.0.1:8887>
+브라우저에서 KAG 제품의 기본 URL로 이동하세요: <http://127.0.0.1:8887>
 ```text
-Default Username: openspg
-Default password: openspg@kag
+기본 사용자 이름: openspg
+기본 비밀번호: openspg@kag
 ```
-See [KAG usage (product mode)](https://openspg.yuque.com/ndx6g9/cwh47i/rs7gr8g4s538b1n7#rtOlA) for detailed introduction.
+자세한 소개는 [KAG 사용 (제품 모드)](https://openspg.yuque.com/ndx6g9/cwh47i/rs7gr8g4s538b1n7#rtOlA)을 참조하세요.
 
-## 4.2 toolkit-based (for developers)
+## 4.2 도구 기반 (개발자용)
 
-### 4.2.1 Engine & Dependent Image Installation
+### 4.2.1 엔진 및 의존성 이미지 설치
 
-Refer to the 3.1 section to complete the installation of the engine & dependent image.
+3.1 섹션을 참조하여 엔진 및 의존성 이미지 설치를 완료하세요.
 
-### 4.2.2 Installation of KAG
+### 4.2.2 KAG 설치
 
-
-**macOS / Linux developers**
-
-```text
-# Create conda env: conda create -n kag-demo python=3.10 && conda activate kag-demo
-
-# Clone code: git clone https://github.com/OpenSPG/KAG.git
-
-# Install KAG: cd KAG && pip install -e .
-```
-
-**Windows developers**
+**macOS / Linux 개발자**
 
 ```text
-# Install the official Python 3.8.10 or later, install Git.
+# conda 환경 생성: conda create -n kag-demo python=3.10 && conda activate kag-demo
 
-# Create and activate Python venv: py -m venv kag-demo && kag-demo\Scripts\activate
+# 코드 클론: git clone https://github.com/OpenSPG/KAG.git
 
-# Clone code: git clone https://github.com/OpenSPG/KAG.git
-
-# Install KAG: cd KAG && pip install -e .
+# KAG 설치: cd KAG && pip install -e .
 ```
 
-### 4.2.3 Use the toolkit
+**Windows 개발자**
 
-Please refer to [KAG usage (developer mode)](https://openspg.yuque.com/ndx6g9/cwh47i/rs7gr8g4s538b1n7#cikso) guide for detailed introduction of the toolkit. Then you can use the built-in components to reproduce the performance results of the built-in datasets, and apply those components to new busineness scenarios.
+```text
+# 공식 Python 3.8.10 이상 설치, Git 설치
 
-# 5. Technical Architecture
+# Python 가상 환경 생성 및 활성화: py -m venv kag-demo && kag-demo\Scripts\activate
+
+# 코드 클론: git clone https://github.com/OpenSPG/KAG.git
+
+# KAG 설치: cd KAG && pip install -e .
+```
+
+### 4.2.3 도구 사용
+
+도구에 대한 자세한 소개는 [KAG 사용 (개발자 모드)](https://openspg.yuque.com/ndx6g9/cwh47i/rs7gr8g4s538b1n7#cikso) 가이드를 참조하세요. 그런 다음 내장된 컴포넌트를 사용하여 내장된 데이터셋의 성능 결과를 재현하고, 이러한 컴포넌트를 새로운 비즈니스 시나리오에 적용할 수 있습니다.
+
+# 5. 기술 아키텍처
 
 ![KAG technical architecture](./_static/images/kag-arch.png)
 
-The KAG framework includes three parts: kg-builder, kg-solver, and kag-model. This release only involves the first two parts, kag-model will be gradually open source release in the future.
+KAG 프레임워크는 kg-builder, kg-solver, kag-model 세 부분으로 구성됩니다. 이번 릴리스에서는 처음 두 부분만 포함되며, kag-model은 향후 점진적으로 오픈소스로 출시될 예정입니다.
 
-kg-builder implements a knowledge representation that is friendly to large-scale language models (LLM). Based on the hierarchical structure of DIKW (data, information, knowledge and wisdom), IT upgrades SPG knowledge representation ability, and is compatible with information extraction without schema constraints and professional knowledge construction with schema constraints on the same knowledge type (such as entity type and event type), it also supports the mutual index representation between the graph structure and the original text block, which supports the efficient retrieval of the reasoning question and answer stage.
+kg-builder는 대규모 언어 모델(LLM)에 친화적인 지식 표현을 구현합니다. DIKW(데이터, 정보, 지식, 지혜)의 계층 구조를 기반으로 SPG의 지식 표현 능력을 업그레이드하며, 동일한 지식 유형(예: 엔티티 유형, 이벤트 유형)에서 스키마 없는 정보 추출과 스키마 제약 전문 지식 구축을 동시에 지원합니다. 또한 그래프 구조와 원본 텍스트 블록 간의 상호 인덱스 표현을 지원하여 추론 질문 답변 단계의 효율적인 검색을 지원합니다.
 
-kg-solver uses a logical symbol-guided hybrid solving and reasoning engine that includes three types of operators: planning, reasoning, and retrieval, to transform natural language problems into a problem-solving process that combines language and symbols. In this process, each step can use different operators, such as exact match retrieval, text retrieval, numerical calculation or semantic reasoning, so as to realize the integration of four different problem solving processes: Retrieval, Knowledge Graph reasoning, language reasoning and numerical calculation.
+kg-solver는 계획, 추론, 검색의 세 가지 유형의 연산자를 포함하는 논리 기호 기반 하이브리드 해결 및 추론 엔진을 사용하여 자연어 문제를 언어와 기호를 결합한 문제 해결 프로세스로 변환합니다. 이 과정에서 각 단계는 정확한 매칭 검색, 텍스트 검색, 수치 계산 또는 의미 추론과 같은 서로 다른 연산자를 사용할 수 있어 검색, 지식 그래프 추론, 언어 추론, 수치 계산의 네 가지 다른 문제 해결 프로세스를 통합할 수 있습니다.
 
-# 6. Community & Support
+# 6. 커뮤니티 및 지원
 
 **GitHub**: <https://github.com/OpenSPG/KAG>
 
-**Website**: <https://openspg.github.io/v2/docs_en>
+**웹사이트**: <https://openspg.github.io/v2/docs_en>
 
 ## Discord <a href="https://discord.gg/PURG77zhQ7"> <img src="https://img.shields.io/discord/1329648479709958236?style=for-the-badge&logo=discord&label=Discord" alt="Discord"></a>
 
-Join our [Discord](https://discord.gg/PURG77zhQ7) community.
+우리의 [Discord](https://discord.gg/PURG77zhQ7) 커뮤니티에 참여하세요.
 
 ## WeChat
 
-Follow OpenSPG Official Account to get technical articles and product updates about OpenSPG and KAG.
+OpenSPG 공식 계정을 팔로우하여 OpenSPG와 KAG에 관한 기술 기사와 제품 업데이트를 받으세요.
 
 <img src="./_static/images/openspg-qr.png" alt="Contact Us: OpenSPG QR-code" width="200">
 
-Scan the QR code below to join our WeChat group. 
+아래 QR 코드를 스캔하여 WeChat 그룹에 참여하세요.
 
 <img src="./_static/images/robot-qr.JPG" alt="Join WeChat group" width="200">
 
+# 7. KAG, RAG, GraphRAG의 차이점
 
-# 7. Differences between KAG, RAG, and GraphRAG
+**KAG 소개 및 응용**: <https://github.com/orgs/OpenSPG/discussions/52>
 
-**KAG introduction and applications**: <https://github.com/orgs/OpenSPG/discussions/52>
+# 8. 인용
 
-# 8. Citation
-
-If you use this software, please cite it as below:
+이 소프트웨어를 사용하는 경우, 아래와 같이 인용해주세요:
 
 * [KAG: Boosting LLMs in Professional Domains via Knowledge Augmented Generation](https://arxiv.org/abs/2409.13731)
 
@@ -220,9 +218,9 @@ If you use this software, please cite it as below:
 }
 ```
 
-# License
+# 라이선스
 
 [Apache License 2.0](LICENSE)
 
-# KAG Core Team
+# KAG 핵심 팀
 Lei Liang, Mengshu Sun, Zhengke Gui, Zhongshu Zhu, Zhouyu Jiang, Ling Zhong, Peilong Zhao, Zhongpu Bo, Jin Yang, Huaidong Xiong, Lin Yuan, Jun Xu, Zaoyang Wang, Zhiqiang Zhang, Wen Zhang, Huajun Chen, Wenguang Chen, Jun Zhou, Haofen Wang
